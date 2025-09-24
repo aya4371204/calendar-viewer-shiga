@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滋賀工場 会議室利用状況</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 5px; margin: 0; background-color: #f9f9f9; color: #333; }
+        #authControls { text-align: center; margin-bottom: 0px; }
+        #signInButton, #signOutButton { padding: 5px 10px; margin: 5px; cursor: pointer; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; }
+        #signInButton { background-color: #4285F4; color: white; border-color: #4285F4; }
+        #signOutButton { background-color: #f1f1f1; }
+        #controls-wrapper { margin-bottom: 20px; padding: 0px; background-color: #ecf0f1; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between; }
+        #date-controls { display: flex; align-items: center; gap: 10px; }
+        #date-controls label { margin-right: 10px; }
+        #date-controls input, #date-controls button { padding: 8px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc; }
+        #table-container { width: 100%; /*max-height: 85vh;*/ margin-top: 15px; border: 1px solid #ccc; }
+        #dailyMatrixTable { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        #dailyMatrixTable th, #dailyMatrixTable td { border: 1px solid #ddd; padding: 0; text-align: center; font-size: 11px; vertical-align: middle; height: 28px; }
+        #dailyMatrixTable thead th { position: sticky; z-index: 10; background-color: #e9ecef; }
+        #dailyMatrixTable thead .header-row-1 th { top: 0; }
+        #dailyMatrixTable thead .header-row-2 th { top: 28px; background-color: #f1f1f1; font-weight: normal; color: #666; height: 22px; }
+        #dailyMatrixTable thead th:first-child { background-color: #e0e0e0; width: 120px; text-align: left; padding-left: 10px; position: sticky; left: 0; z-index: 12; }
+        #dailyMatrixTable tbody td { height: 26px; }
+        #dailyMatrixTable tbody td:first-child { width: 120px; white-space: nowrap; background-color: #f8f9fa; font-weight: bold; text-align: left; padding-left: 10px; overflow: hidden; text-overflow: ellipsis; position: sticky; left: 0; z-index: 2; }
+        #dailyMatrixTable tbody td:not(:first-child), #dailyMatrixTable thead .header-row-2 th { width: 30px; }
+        .matrix-cell-busy { background-color: #ffebee; cursor: not-allowed; padding: 2px; }
+        .matrix-cell-available { background-color: #e8f5e9; cursor: pointer; }
+        .matrix-cell-available:hover { background-color: #c8e6c9; }
+         .event-bar {
+            background: linear-gradient(to bottom, #ef5350, #d32f2f);
+            color: white;
+            border-radius: 3px;
+            padding: 0 4px;        /* 上下の余白は0にすると中央揃えが綺麗に見えます */
+            font-size: 10px;
+            line-height: 1.1;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;         /* 変更点１：flexboxを有効にする */
+            align-items: center;   /* 変更点２：垂直方向（縦）の中央揃え */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.2);
+            border-bottom: 1px solid #b71c1c;
+        }
+        #dailyMatrixTable tr.car-row td:first-child { background-color: #e3f2fd; color: #0d47a1; }
+        #dailyMatrixTable tr.group-separator { border-top: 2px solid #666; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100; }
+        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 101; width: 90%; max-width: 500px; }
+        .modal-header { padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 20px; }
+        .modal-header h2 { margin: 0; font-size: 20px; }
+        .modal-body .form-group { margin-bottom: 15px; }
+        .modal-body label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .modal-body input, .modal-body textarea, .modal-body select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        .time-select-group { display: flex; align-items: center; gap: 10px; }
+        #targetCalendarSelect { width: 100%; padding: 8px; }
+        .modal-footer { text-align: right; margin-top: 20px; }
+        .modal-footer button { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; margin-left: 10px; }
+        #saveBookingBtn { background-color: #28a745; color: white; }
+        #cancelBookingBtn { background-color: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+    <div id="authControls">
+        <button id="signInButton" style="display: none;">Googleでサインイン</button>
+    </div>
+    <div id="controls-wrapper" style="display: none;">
+        <div id="date-controls">
+            <label for="dailyDatePicker">日付:</label>
+            <input type="date" id="dailyDatePicker">
+            <button id="prevDayBtn" title="前の日">&lt;</button>
+            <button id="nextDayBtn" title="次の日">&gt;</button>
+        </div>
+        <button id="signOutButton" style="display: none;">サインアウト</button>
+    </div>
+    <div id="loading" style="display: none;">読み込み中...</div>
+    <div id="error" style="display: none;"></div>
+    <div id="table-container">
+        <div id="dataDisplayArea"></div>
+    </div>
+    <div id="bookingModalBackdrop" class="modal-backdrop"></div>
+    <div id="bookingModal" class="modal-content">
+        <div class="modal-header">
+            <h2 id="bookingModalTitle">会議予約</h2>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>リソース:</label>
+                <p id="bookingResourceName"></p>
+            </div>
+            <div class="form-group">
+                <label>時間:</label>
+                <div class="time-select-group">
+                    <select id="bookingStartTime"></select>
+                    <span>～</span>
+                    <select id="bookingEndTime"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="eventTitle">会議名:</label>
+                <input type="text" id="eventTitle" placeholder="会議名を入力">
+            </div>
+            <div class="form-group">
+                <label for="targetCalendarSelect">作成先カレンダー:</label>
+                <select id="targetCalendarSelect"></select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="cancelBookingBtn">キャンセル</button>
+            <button id="saveBookingBtn">予約作成</button>
+        </div>
+    </div>
+    <script src="calendar_viewer_web_shiga.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</body>
+</html>
