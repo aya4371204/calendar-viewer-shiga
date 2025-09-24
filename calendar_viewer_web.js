@@ -5,7 +5,7 @@ let gisInited = false;
 
 // ★★★ GCPで作成したウェブアプリケーション用の情報を設定 ★★★
 const API_KEY = 'AIzaSyCpRjx_lkdpcp-eePb-_psrh5MUB-T06aA';
-const CLIENT_ID = '976002357617-j8i08ahpphr1frt1ko7tltvfbp847alk.apps.googleusercontent.com';
+const CLIENT_ID = '976002357617-gfbg1g3obnb323cr845a6nmebucpe67h.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly';
 
 function gapiLoaded() {
