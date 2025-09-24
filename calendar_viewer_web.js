@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-            const desiredCalendarId = 'rteikabo0e4p6gkd6gdfdbvmf4@group.calendar.google.com';
+            const desiredCalendarId = 'c_b9aa93a9cf073d008a6f9302c77d767bfd8cbacb1ea1799a01c63d4a5fa17107@group.calendar.google.com';
             const desiredOptionExists = Array.from(targetCalendarSelect.options).some(opt => opt.value === desiredCalendarId);
             if (desiredOptionExists) {
                 targetCalendarSelect.value = desiredCalendarId;
