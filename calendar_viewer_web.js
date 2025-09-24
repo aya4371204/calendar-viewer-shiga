@@ -72,13 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Resource Data ---
     const resourceCalendarItems = [
-        { name: "滋賀工場-1-4号館第一応接室 (6)", id: "c_1884ojmrqcv0iitpiq88jj7i96msk@resource.calendar.google.com", type: "room" },
-        { name: "滋賀工場-1-4号館第一会議室 (20)", id: "c_188a7oshg5c5ijatnn3hs9cc4meie@resource.calendar.google.com", type: "room" },
-        { name: "滋賀工場-1-4号館第二会議室 (4)", id: "c_1881acanrq6f0jitl0grsoqhfg1b6@resource.calendar.google.com", type: "room" },
-        { name: "滋賀工場-1-階-食堂第三会議室 (4)", id: "c_1881v7mm3lr06i72lar5oliqu7seg@resource.calendar.google.com", type: "room" },
-        { name: "滋賀工場-1-階-食堂第四会議室 (4)", id: "c_1887eobagp11ohunnvljr96o10vhm@resource.calendar.google.com", type: "room" },
-        { name: "滋賀工場-1-階-食堂第五会議室 (4)", id: "c_1887f81iqru2qhpul4ish83rmmjsc@resource.calendar.google.com", type: "room" },
-        { name: "滋賀工場-1-品証棟応接室 (4)", id: "c_18860s77j0vlohejl4ioo2bpi56mk@resource.calendar.google.com", type: "room" }
+        { name: "1-4号館/第一応接室", id: "c_1884ojmrqcv0iitpiq88jj7i96msk@resource.calendar.google.com", type: "room" },
+        { name: "1-4号館/第一会議室", id: "c_188a7oshg5c5ijatnn3hs9cc4meie@resource.calendar.google.com", type: "room" },
+        { name: "1-4号館/第二会議室", id: "c_1881acanrq6f0jitl0grsoqhfg1b6@resource.calendar.google.com", type: "room" },
+        { name: "食堂/第三会議室", id: "c_1881v7mm3lr06i72lar5oliqu7seg@resource.calendar.google.com", type: "room" },
+        { name: "食堂/第四会議室", id: "c_1887eobagp11ohunnvljr96o10vhm@resource.calendar.google.com", type: "room" },
+        { name: "食堂/第五会議室", id: "c_1887f81iqru2qhpul4ish83rmmjsc@resource.calendar.google.com", type: "room" },
+        { name: "品証棟/応接室", id: "c_18860s77j0vlohejl4ioo2bpi56mk@resource.calendar.google.com", type: "room" }
     ];
 
     // --- State Variables ---
